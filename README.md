@@ -8,6 +8,7 @@ An online order page for a farm stand selling eggs and honey. Customers choose i
 |---|---|
 | `docs/index.html` | The store page customers order from |
 | `docs/admin.html` | The admin page: orders, products, sales and settings (sign in as `admin` / `1111`) |
+| `docs/art.js` | Drawn artwork for products and the header, used when a product has no photo |
 | `docs/store-core.js` | Store rules (ordering, stock, payments, reports), shared by the server and demo mode |
 | `docs/api.js` | Connects the pages to the server, or runs demo mode |
 | `worker/index.js` | The Cloudflare Worker backend (API, sign-in, product photos) |
@@ -20,6 +21,20 @@ An online order page for a farm stand selling eggs and honey. Customers choose i
 - **Demo (GitHub Pages, or any URL with `?demo`):** everything works, but data is saved only in the browser you're using. This is for trying out the design and flow.
 
 ## Release notes
+
+### v0.2.0
+- Store redesigned as a farm stand: red-and-cream striped awning, painted wooden sign, products in wooden crates with hand-lettered price tags, and the order form on a lined order-pad slip
+- Original drawn artwork (egg carton, 1 lb and 2 lb honey jars, a basket for other products, and a bee), in an old engraved-label style. A photo uploaded in admin replaces a product's artwork.
+- Sold-out products get a "Sold out" stamp
+- On phones, product crates use a compact side-by-side layout
+
+Test and deploy are the same as below:
+```bash
+cd eggs
+npm test
+cd docs && python3 -m http.server 8000   # http://localhost:8000/?demo
+cd .. && npx wrangler deploy             # once Cloudflare is set up
+```
 
 ### v0.1.0 (prototype)
 - Store page styled as a farm-stand price board, with Eggs (dozen), Honey (1 lb jar) and Honey (2 lb jar) as starter products
