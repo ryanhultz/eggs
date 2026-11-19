@@ -1,0 +1,61 @@
+/* Lisa's Hen & Hive: shared look for the store and admin pages */
+:root {
+  --ground: #e4ebe3;      /* pale green, like an Ameraucana eggshell */
+  --paper: #f7f5ee;
+  --board: #20392c;       /* hemlock green farm-stand sign */
+  --board-ink: #f5f1e6;
+  --board-line: #3b5848;
+  --honey: #d89a1e;
+  --honey-deep: #b97f0c;
+  --kraft: #cdb68e;
+  --ink: #1e2a23;
+  --muted: #56655b;
+  --line: #c9d3c8;
+  --error: #9e3a2a;
+  --ok: #2f6b45;
+  --slab: "Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
+  --sans: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font: 400 1rem/1.55 var(--sans);
+}
+h1, h2, h3 { font-family: var(--slab); font-weight: 700; line-height: 1.1; margin: 0; }
+a { color: var(--board); }
+:focus-visible { outline: 3px solid var(--honey); outline-offset: 2px; }
+
+.btn {
+  font: 600 1rem/1 var(--sans); border: 0; border-radius: 6px; cursor: pointer;
+  padding: .95rem 1.2rem; background: var(--honey); color: var(--board);
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem; text-decoration: none;
+}
+.btn:hover { background: var(--honey-deep); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn.secondary { background: transparent; color: var(--board); box-shadow: inset 0 0 0 1.5px var(--board); }
+.btn.secondary:hover { background: rgba(32, 57, 44, .07); }
+.btn.small { padding: .55rem .8rem; font-size: .9rem; }
+.btn.danger { background: transparent; color: var(--error); box-shadow: inset 0 0 0 1.5px var(--error); }
+
+label { display: block; font-weight: 600; font-size: .92rem; margin: 1rem 0 .35rem; }
+.hint { color: var(--muted); font-size: .88rem; font-weight: 400; }
+input, textarea, select {
+  width: 100%; font: 400 1rem/1.4 var(--sans); color: var(--ink);
+  padding: .75rem .8rem; border: 1.5px solid var(--line); border-radius: 6px; background: var(--paper);
+}
+input:focus, textarea:focus, select:focus { border-color: var(--board); outline: none; box-shadow: 0 0 0 3px rgba(216, 154, 30, .35); }
+textarea { min-height: 5.5rem; resize: vertical; }
+
+.demo-banner {
+  background: var(--kraft); color: var(--ink); font-size: .85rem; padding: .5rem 1rem; text-align: center;
+}
+.error { color: var(--error); font-weight: 600; }
+.toast {
+  position: fixed; left: 50%; bottom: 1.2rem; transform: translate(-50%, 1rem); opacity: 0;
+  background: var(--board); color: var(--board-ink); padding: .7rem 1.1rem; border-radius: 6px;
+  font-weight: 600; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 50; max-width: 90vw;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#20392c" />
+<meta name="description" content="Order fresh eggs and honey from Lisa's Hen & Hive in Cayuga, NY." />
+<title>Lisa's Hen &amp; Hive</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2320392c'/%3E%3Cpath d='M32 10c10 0 18 15 18 27a18 18 0 0 1-36 0c0-12 8-27 18-27z' fill='%23f5f1e6'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&family=Zilla+Slab:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  .wrap { max-width: 40rem; margin: 0 auto; padding: 0 1.1rem; }
+  header.site { padding: 2.6rem 0 1.6rem; }
+  header.site h1 { font-size: clamp(2.5rem, 9vw, 3.9rem); letter-spacing: -.01em; color: var(--board); }
+  header.site p { margin: .7rem 0 0; font-size: 1.12rem; color: var(--muted); max-width: 30rem; }
+
+  /* The price board is the page's one bold element: a painted farm-stand sign you order from. */
+  .board {
+    background: var(--board); color: var(--board-ink); border-radius: 8px;
+    padding: .55rem; box-shadow: 0 1px 0 rgba(0,0,0,.08);
+  }
+  .board-inner { border: 1.5px solid var(--board-line); border-radius: 5px; padding: .4rem 1.1rem; }
+  .item { display: grid; grid-template-columns: auto 1fr auto; gap: .45rem .9rem; align-items: center; padding: 1.05rem 0; }
+  .item.no-photo { grid-template-columns: 1fr auto; }
+  .item + .item { border-top: 1.5px dashed var(--board-line); }
+  .item .photo { grid-row: 1 / span 2; width: 3.6rem; height: 3.6rem; border-radius: 50%; object-fit: cover; background: var(--board-line); }
+  .item .line { grid-column: 1 / -1; display: flex; align-items: baseline; gap: .5rem; min-width: 0; }
+  .item:not(.no-photo) .line { grid-column: 2 / -1; }
+  .item .name { font: 700 1.35rem/1.15 var(--slab); }
+  .item .unit { font: 500 1.05rem/1.15 var(--slab); color: var(--kraft); white-space: nowrap; }
+  .item .leader { flex: 1; border-bottom: 2px dotted var(--board-line); transform: translateY(-.3rem); min-width: 1rem; }
+  .item .price { font: 700 1.35rem/1 var(--slab); color: var(--honey); white-space: nowrap; }
+  .item .desc { grid-row: 2; font-size: .9rem; color: #c3cdc4; }
+  .item:not(.no-photo) .desc { grid-column: 2; }
+  .item .stepper, .item .sold-out { grid-row: 2; grid-column: -2; justify-self: end; }
+  .stepper { display: flex; align-items: center; background: rgba(0,0,0,.18); border-radius: 999px; }
+  .stepper button {
+    width: 2.6rem; height: 2.6rem; border: 0; background: none; color: var(--board-ink);
+    font: 500 1.4rem/1 var(--sans); cursor: pointer; border-radius: 50%;
+  }
+  .stepper button:hover:not(:disabled) { background: rgba(255,255,255,.08); }
+  .stepper button:disabled { opacity: .3; cursor: default; }
+  .stepper output { min-width: 1.6rem; text-align: center; font: 700 1.15rem/1 var(--slab); }
+  .stepper.has { background: var(--honey); }
+  .stepper.has button, .stepper.has output { color: var(--board); }
+  .sold-out { font: 600 .95rem/1 var(--sans); color: var(--kraft); padding: .6rem .4rem; }
+  .board .closed { padding: 1.6rem .4rem; font: 500 1.2rem/1.4 var(--slab); }
+
+  section.order { padding: 2.4rem 0 3rem; }
+  section.order h2 { font-size: 1.75rem; color: var(--board); }
+  .summary { margin: 1rem 0 .4rem; padding: 0; list-style: none; }
+  .summary li { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; }
+  .summary .total { border-top: 1.5px solid var(--board); margin-top: .35rem; padding-top: .6rem; font: 700 1.2rem/1.2 var(--slab); }
+  .empty-cart { color: var(--muted); margin: .8rem 0 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .8rem; }
+  @media (max-width: 30rem) { .two { grid-template-columns: 1fr; } }
+  form .btn { width: 100%; margin-top: 1.4rem; font-size: 1.08rem; }
+  .fine { color: var(--muted); font-size: .9rem; margin: .8rem 0 0; }
+  #form-error { margin: 1rem 0 0; }
+
+  .cartbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--paper); border-top: 1.5px solid var(--line);
+    padding: .7rem 1.1rem calc(.7rem + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    transform: translateY(110%); visibility: hidden; transition: transform .2s, visibility .2s;
+  }
+  .cartbar.show { transform: none; visibility: visible; }
+  .cartbar strong { font: 700 1.15rem/1.2 var(--slab); }
+
+  .done { padding: 2rem 0 3rem; }
+  .done h2 { font-size: clamp(1.9rem, 7vw, 2.5rem); color: var(--board); }
+  .done .lead { font-size: 1.1rem; margin: .8rem 0 0; }
+  .pay { background: var(--paper); border: 1.5px solid var(--line); border-radius: 8px; padding: 1.2rem; margin: 1.6rem 0; }
+  .pay h3 { font-size: 1.25rem; color: var(--board); }
+  .pay p { margin: .5rem 0 0; }
+  .venmo { background: #008cff; color: #fff; margin-top: 1rem; width: 100%; }
+  .venmo:hover { background: #0074d4; }
+  footer { padding: 2rem 0 6rem; color: var(--muted); font-size: .85rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="demo-banner" id="demo-banner" hidden>Demo mode: orders are saved in this browser only.</div>
+
+<div class="wrap">
+  <header class="site">
+    <h1 id="store-name">Lisa's Hen &amp; Hive</h1>
+    <p id="tagline"></p>
+  </header>
+
+  <div id="shop">
+    <div class="board"><div class="board-inner" id="board" aria-live="polite">
+      <p class="closed">Loading…</p>
+    </div></div>
+
+    <section class="order" id="order" aria-labelledby="order-h">
+      <h2 id="order-h">Your order</h2>
+      <ul class="summary" id="summary"></ul>
+      <p class="empty-cart" id="empty-cart">Use the + buttons above to add eggs or honey.</p>
+
+      <form id="form" novalidate>
+        <label for="f-name">Name</label>
+        <input id="f-name" autocomplete="name" required />
+        <div class="two">
+          <div>
+            <label for="f-phone">Phone</label>
+            <input id="f-phone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+          <div>
+            <label for="f-email">Email</label>
+            <input id="f-email" type="email" autocomplete="email" inputmode="email" />
+          </div>
+        </div>
+        <p class="hint" style="margin:.4rem 0 0">Give a phone number, an email, or both.</p>
+        <label for="f-notes">Notes <span class="hint">(optional)</span></label>
+        <textarea id="f-notes" placeholder="Best times to reach you, or anything else Lisa should know"></textarea>
+        <p class="error" id="form-error" role="alert" hidden></p>
+        <button class="btn" id="submit" type="submit">Place order</button>
+        <p class="fine" id="order-note"></p>
+      </form>
+    </section>
+  </div>
+
+  <section class="done" id="done" hidden tabindex="-1"></section>
+
+  <footer>
+    <span id="foot-name">Lisa's Hen &amp; Hive</span>, Cayuga, NY
+    <br /><a href="admin.html">Store admin</a>
+  </footer>
+</div>
+
+<div class="cartbar" id="cartbar" aria-hidden="true">
+  <strong id="cartbar-text"></strong>
+  <a class="btn small" href="#order">Review order</a>
+</div>
+
+<script type="module">
+import { api, DEMO, core } from './api.js';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = core.fmtMoney;
+
+let store = null;
+const cart = {}; // product id -> qty
+
+$('demo-banner').hidden = !DEMO;
+
+async function loadStore() {
+  try {
+    store = await api.store();
+  } catch (e) {
+    $('board').innerHTML = `<p class="closed">${esc(e.message)}</p>`;
+    $('order').hidden = true;
+    return;
+  }
+  const s = store.settings;
+  document.title = s.storeName;
+  $('store-name').textContent = s.storeName;
+  $('foot-name').textContent = s.storeName;
+  $('tagline').textContent = s.tagline;
+  $('order-note').textContent = `No payment needed to place your order. ${s.orderNote}`;
+  for (const id of Object.keys(cart)) {
+    const p = store.products.find(x => x.id === id);
+    if (!p || p.soldOut) delete cart[id]; else cart[id] = Math.min(cart[id], p.maxQty);
+  }
+  renderBoard(); renderCart();
+}
+
+function renderBoard() {
+  if (!store.settings.open) {
+    $('board').innerHTML = `<p class="closed">${esc(store.settings.closedMessage)}</p>`;
+    $('order').hidden = true;
+    return;
+  }
+  $('order').hidden = false;
+  if (!store.products.length) {
+    $('board').innerHTML = '<p class="closed">Nothing is listed right now. Check back soon.</p>';
+    return;
+  }
+  $('board').innerHTML = store.products.map(p => {
+    const img = p.imageVersion ? api.imageUrl(p) : '';
+    const q = cart[p.id] || 0;
+    const label = esc(core.productLabel(p));
+    const control = p.soldOut
+      ? '<span class="sold-out">Sold out</span>'
+      : `<div class="stepper ${q ? 'has' : ''}" role="group" aria-label="Quantity of ${label}">
+           <button type="button" data-id="${p.id}" data-d="-1" aria-label="Remove one ${label}" ${q ? '' : 'disabled'}>−</button>
+           <output aria-live="polite">${q}</output>
+           <button type="button" data-id="${p.id}" data-d="1" aria-label="Add one ${label}" ${q >= p.maxQty ? 'disabled' : ''}>+</button>
+         </div>`;
+    return `<div class="item ${img ? '' : 'no-photo'}">
+      ${img ? `<img class="photo" src="${esc(img)}" alt="" loading="lazy" />` : ''}
+      <div class="line"><span class="name">${esc(p.name)}</span>${p.unit ? `<span class="unit">${esc(p.unit)}</span>` : ''}<span class="leader"></span><span class="price">${money(p.price)}</span></div>
+      ${control}
+      ${p.description ? `<div class="desc">${esc(p.description)}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+$('board').addEventListener('click', e => {
+  const b = e.target.closest('button[data-id]');
+  if (!b) return;
+  const p = store.products.find(x => x.id === b.dataset.id);
+  cart[p.id] = Math.max(0, Math.min(p.maxQty, (cart[p.id] || 0) + Number(b.dataset.d)));
+  if (!cart[p.id]) delete cart[p.id];
+  renderBoard(); renderCart();
+  const again = $('board').querySelector(`button[data-id="${p.id}"][data-d="${b.dataset.d}"]`);
+  if (again && !again.disabled) again.focus();
+});
+
+function cartLines() {
+  return Object.entries(cart).map(([id, qty]) => ({ p: store.products.find(x => x.id === id), qty })).filter(l => l.p);
+}
+
+function renderCart() {
+  const lines = cartLines();
+  const total = lines.reduce((a, l) => a + l.p.price * l.qty, 0);
+  const count = lines.reduce((a, l) => a + l.qty, 0);
+  $('empty-cart').hidden = !!lines.length;
+  $('summary').innerHTML = lines.length ? lines.map(l =>
+    `<li><span>${l.qty} × ${esc(core.productLabel(l.p))}</span><span>${money(l.p.price * l.qty)}</span></li>`).join('') +
+    `<li class="total"><span>Total</span><span>${money(total)}</span></li>` : '';
+  $('submit').textContent = lines.length ? `Place order for ${money(total)}` : 'Place order';
+  $('cartbar-text').textContent = `${count} item${count === 1 ? '' : 's'}, ${money(total)}`;
+  updateCartbar();
+}
+
+// Show the bottom bar only while there's a cart and the order form is off screen.
+let formVisible = false;
+new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; updateCartbar(); }, { threshold: 0.05 }).observe($('order'));
+function updateCartbar() {
+  const show = Object.keys(cart).length > 0 && !formVisible && !$('shop').hidden;
+  $('cartbar').classList.toggle('show', show);
+  $('cartbar').setAttribute('aria-hidden', String(!show));
+}
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('form-error');
+  err.hidden = true;
+  const lines = cartLines();
+  const customer = { name: $('f-name').value, phone: $('f-phone').value, email: $('f-email').value, notes: $('f-notes').value };
+  const show = msg => { err.textContent = msg; err.hidden = false; };
+  if (!lines.length) return show('Add at least one item to your order.');
+  if (!customer.name.trim()) { $('f-name').focus(); return show('Enter your name.'); }
+  if (!customer.phone.trim() && !customer.email.trim()) { $('f-phone').focus(); return show('Enter a phone number or email so Lisa can reach you.'); }
+
+  const btn = $('submit');
+  btn.disabled = true; btn.textContent = 'Placing order…';
+  try {
+    const r = await api.placeOrder({ customer, items: lines.map(l => ({ id: l.p.id, qty: l.qty })) });
+    showDone(r, customer.name.trim().split(/\s+/)[0]);
+  } catch (ex) {
+    show(ex.message);
+    if (ex.status === 409) await loadStore();
+  } finally {
+    btn.disabled = false; renderCart();
+  }
+});
+
+function showDone(r, firstName) {
+  const pay = r.venmoUrl
+    ? `<h3>Pay with Venmo</h3>
+       <p>You can pay now or when you get your order. Your order number is already in the Venmo note.</p>
+       <a class="btn venmo" href="${esc(r.venmoUrl)}" target="_blank" rel="noopener">Pay ${money(r.total)} with Venmo</a>`
+    : `<h3>How to pay</h3>
+       <p>Venmo payments are coming soon. For now, pay Lisa when you get your order.</p>`;
+  $('done').innerHTML = `
+    <h2>Thanks, ${esc(firstName)}. Order #${r.number} is in.</h2>
+    <p class="lead">${esc(r.orderNote)}</p>
+    <ul class="summary">
+      ${r.items.map(i => `<li><span>${i.qty} × ${esc(core.productLabel(i))}</span><span>${money(i.price * i.qty)}</span></li>`).join('')}
+      <li class="total"><span>Total</span><span>${money(r.total)}</span></li>
+    </ul>
+    <div class="pay">${pay}</div>
+    <button class="btn secondary" id="again" type="button">Place another order</button>`;
+  $('shop').hidden = true; $('done').hidden = false;
+  for (const k of Object.keys(cart)) delete cart[k];
+  $('form').reset();
+  updateCartbar();
+  window.scrollTo(0, 0); $('done').focus({ preventScroll: true });
+  $('again').onclick = async () => {
+    $('done').hidden = true; $('shop').hidden = false;
+    await loadStore(); window.scrollTo(0, 0);
+  };
+}
+
+loadStore();
+</script>
+</body>
+</html>

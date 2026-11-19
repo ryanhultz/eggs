@@ -1,0 +1,20 @@
+name = "hen-and-hive"
+main = "worker/index.js"
+compatibility_date = "2026-11-01"
+
+# The store and admin pages. Requests that don't match a file (/api/*, /img/*) go to the Worker.
+[assets]
+directory = "./docs"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hen-and-hive"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+
+# Prototype login. Before going live, delete ADMIN_PASSWORD below and run
+#   npx wrangler secret put ADMIN_PASSWORD
+# so the password isn't in the public repo.
+[vars]
+ADMIN_USER = "admin"
+ADMIN_PASSWORD = "1111"
