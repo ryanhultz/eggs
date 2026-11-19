@@ -22,6 +22,20 @@ An online order page for a farm stand selling eggs and honey. Customers choose i
 
 ## Release notes
 
+### v0.2.2
+- Honey wording now matches the jar label: both honey products say "100% pure honey from Kolis Apiary in Camillus, NY."
+- The drawn honey jars read "Pure honey" with the net weight: 1 lb (454 g) and 2 lb (907 g)
+- These are starter descriptions for new stores. A store that already has data keeps its own; change it in Admin → Products.
+
+Test and deploy:
+```bash
+cd eggs
+npm install
+npm test
+cd docs && python3 -m http.server 8000   # http://localhost:8000/?demo
+cd .. && npm run deploy                  # once Cloudflare is set up
+```
+
 ### v0.2.1
 - Wrangler 4 is now a dev dependency, so `npm install` sets up the Cloudflare tools and `npm run dev` / `npm run deploy` work without a global install
 

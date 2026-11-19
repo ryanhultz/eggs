@@ -82,8 +82,8 @@ export function honeyJar(big = false) {
       <rect x="-${w / 2 - 12}" y="-22" width="${w - 24}" height="44" rx="3" fill="#f4ead5" stroke="${INK}" stroke-width="1.2" />
       <rect x="-${w / 2 - 15}" y="-19" width="${w - 30}" height="38" rx="2" fill="none" stroke="${INK}" stroke-width=".6" />
       ${hexes(0, -9, 3.6)}
-      <text y="5" text-anchor="middle" font-family="Georgia, serif" font-size="${big ? 8 : 7}" letter-spacing="1" fill="${INK}">RAW HONEY</text>
-      <text y="15" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="7.5" fill="${INK}">${big ? 'two pounds' : 'one pound'}</text>
+      <text y="5" text-anchor="middle" font-family="Georgia, serif" font-size="${big ? 8 : 7}" letter-spacing="1" fill="${INK}">PURE HONEY</text>
+      <text y="15" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="${big ? 6.5 : 5.5}" fill="${INK}">${big ? 'net wt. 2 lb (907 g)' : 'net wt. 1 lb (454 g)'}</text>
     </g>
   </svg>`;
 }
