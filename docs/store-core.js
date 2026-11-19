@@ -23,8 +23,8 @@ export function seedState() {
     },
     products: [
       { id: 'eggs-dozen', name: 'Eggs', unit: 'dozen', price: 500, stock: null, active: true, description: 'Farm-fresh, from our free-ranging hens.', imageVersion: 0 },
-      { id: 'honey-1lb', name: 'Honey', unit: '1 lb jar', price: 1200, stock: null, active: true, description: 'Raw honey from our own hives.', imageVersion: 0 },
-      { id: 'honey-2lb', name: 'Honey', unit: '2 lb jar', price: 2200, stock: null, active: true, description: 'Raw honey from our own hives.', imageVersion: 0 },
+      { id: 'honey-1lb', name: 'Honey', unit: '1 lb jar', price: 1200, stock: null, active: true, description: '100% pure honey from Kolis Apiary in Camillus, NY.', imageVersion: 0 },
+      { id: 'honey-2lb', name: 'Honey', unit: '2 lb jar', price: 2200, stock: null, active: true, description: '100% pure honey from Kolis Apiary in Camillus, NY.', imageVersion: 0 },
     ],
     orders: [],
   };

@@ -23,6 +23,7 @@ npx wrangler deploy                        # deploy to Cloudflare
 
 ## Decisions so far
 - Products: Eggs (dozen), Honey (1 lb jar), Honey (2 lb jar). Prices of $5, $12 and $22 are placeholders for Lisa to change.
+- Honey copy follows the jar label: "100% pure honey from Kolis Apiary in Camillus, NY." Net weights are 1 lb (454 g) and 2 lb (907 g).
 - No pickup/delivery choice. Customers give a name and a phone number or email, and are told Lisa will reach out.
 - Venmo is a placeholder until a username is set in Settings. Then customers get a prefilled `venmo.com/?txn=pay...` link. Fully automatic payment (PayPal SDK Venmo button) is a possible later step.
 - Admin login is `admin` / `1111` for the prototype. It's checked server-side with an HMAC-signed 30-day token.
