@@ -22,6 +22,19 @@ An online order page for a farm stand selling eggs and honey. Customers choose i
 
 ## Release notes
 
+### v0.2.1
+- Wrangler 4 is now a dev dependency, so `npm install` sets up the Cloudflare tools and `npm run dev` / `npm run deploy` work without a global install
+
+Test and deploy:
+```bash
+cd eggs
+npm install
+npm test
+npx wrangler d1 execute hen-and-hive --local --file=schema.sql
+npm run dev                              # http://localhost:8787  (admin: /admin.html, admin / 1111)
+npm run deploy                           # once Cloudflare is set up
+```
+
 ### v0.2.0
 - Store redesigned as a farm stand: red-and-cream striped awning, painted wooden sign, products in wooden crates with hand-lettered price tags, and the order form on a lined order-pad slip
 - Original drawn artwork (egg carton, 1 lb and 2 lb honey jars, a basket for other products, and a bee), in an old engraved-label style. A photo uploaded in admin replaces a product's artwork.
