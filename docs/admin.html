@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#20392c" />
+<meta name="robots" content="noindex" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Hen &amp; Hive Admin" />
+<title>Store admin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%2320392c'/%3E%3Cpath d='M32 10c10 0 18 15 18 27a18 18 0 0 1-36 0c0-12 8-27 18-27z' fill='%23d89a1e'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&family=Zilla+Slab:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  body { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1rem; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.2rem 0 .4rem; }
+  .top h1 { font-size: 1.5rem; color: var(--board); }
+  .top a { font-size: .9rem; }
+  h2 { font-size: 1.45rem; color: var(--board); margin: 1.2rem 0 .8rem; }
+
+  .login { max-width: 22rem; margin: 12vh auto 0; padding: 0 1rem; }
+  .login h1 { font-size: 2rem; color: var(--board); }
+  .login .btn { width: 100%; margin-top: 1.3rem; }
+
+  .tabs {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; display: flex;
+    background: var(--board); padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tabs button {
+    flex: 1; border: 0; background: none; color: #b9c6bc; cursor: pointer;
+    font: 600 .82rem/1 var(--sans); padding: .9rem 0 1rem; position: relative;
+  }
+  .tabs button[aria-selected="true"] { color: var(--board-ink); box-shadow: inset 0 3px 0 var(--honey); }
+  .tabs .count {
+    display: inline-block; min-width: 1.25rem; padding: .15rem .3rem; margin-left: .25rem; border-radius: 999px;
+    background: var(--honey); color: var(--board); font-size: .72rem;
+  }
+  .tabs .count[hidden], .panel[hidden] { display: none; }
+  .toast { bottom: calc(5rem + env(safe-area-inset-bottom)); }
+  input[type=checkbox] { accent-color: var(--board); }
+
+  .seg { display: flex; flex-wrap: wrap; gap: .4rem; margin: .2rem 0 1rem; }
+  .seg button {
+    border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px;
+    padding: .45rem .85rem; font: 500 .9rem/1 var(--sans); cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--board); border-color: var(--board); color: var(--board-ink); }
+
+  .order { background: var(--paper); border: 1.5px solid var(--line); border-radius: 8px; padding: 1rem; margin-bottom: .8rem; }
+  .order.is-new { border-left: 5px solid var(--honey); }
+  .order header { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; }
+  .order .who { font: 700 1.2rem/1.2 var(--slab); }
+  .order .num { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+  .order .when { color: var(--muted); font-size: .88rem; margin-top: .15rem; }
+  .order ul { list-style: none; margin: .7rem 0; padding: 0; }
+  .order li { display: flex; justify-content: space-between; gap: 1rem; padding: .15rem 0; }
+  .order .tot { font-weight: 600; border-top: 1px solid var(--line); margin-top: .3rem; padding-top: .4rem; }
+  .order .note { background: var(--ground); border-radius: 6px; padding: .55rem .7rem; font-size: .93rem; margin: .5rem 0; white-space: pre-wrap; }
+  .contact { display: flex; flex-wrap: wrap; gap: .4rem; margin: .4rem 0 .8rem; }
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; align-items: end; }
+  .controls label { margin: 0 0 .3rem; font-size: .82rem; color: var(--muted); }
+  .controls select { padding: .6rem; }
+  .paidrow { display: flex; align-items: center; gap: .5rem; }
+  .pill { font-size: .78rem; font-weight: 600; padding: .2rem .5rem; border-radius: 999px; }
+  .pill.paid { background: #d6eadb; color: var(--ok); }
+  .pill.unpaid { background: #f3e2c2; color: #7a5208; }
+  .order details { margin-top: .7rem; }
+  .order summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+  .empty { color: var(--muted); padding: 1.5rem 0; }
+
+  .prod { display: grid; grid-template-columns: 3.4rem 1fr auto; gap: .8rem; align-items: center; background: var(--paper);
+    border: 1.5px solid var(--line); border-radius: 8px; padding: .7rem; margin-bottom: .6rem; }
+  .prod.off { opacity: .6; }
+  .thumb { width: 3.4rem; height: 3.4rem; border-radius: 50%; object-fit: cover; background: var(--board); display: grid; place-items: center;
+    color: var(--board-ink); font: 700 1.2rem/1 var(--slab); }
+  .prod .t { font: 700 1.1rem/1.2 var(--slab); }
+  .prod .m { color: var(--muted); font-size: .88rem; }
+  .prod .acts { display: flex; gap: .3rem; }
+  .icon { border: 1.5px solid var(--line); background: var(--paper); border-radius: 6px; width: 2.3rem; height: 2.3rem; cursor: pointer; font-size: 1rem; }
+  .editor { background: var(--paper); border: 1.5px solid var(--board); border-radius: 8px; padding: 1rem; margin-bottom: .8rem; }
+  .editor .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .7rem; }
+  .editor .btns { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.1rem; }
+  .check { display: flex; align-items: center; gap: .5rem; font-weight: 500; margin-top: 1rem; }
+  .check input { width: 1.2rem; height: 1.2rem; }
+  .photo-edit { display: flex; align-items: center; gap: .8rem; margin-top: .4rem; }
+
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+  .stat { background: var(--paper); border: 1.5px solid var(--line); border-radius: 8px; padding: .8rem; }
+  .stat b { display: block; font: 700 1.55rem/1.1 var(--slab); color: var(--board); }
+  .stat span { color: var(--muted); font-size: .88rem; }
+  table { width: 100%; border-collapse: collapse; background: var(--paper); border-radius: 8px; overflow: hidden; }
+  th, td { text-align: left; padding: .6rem .7rem; border-bottom: 1px solid var(--line); }
+  th { font-size: .85rem; color: var(--muted); font-weight: 600; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.2rem; }
+  form.settings .btn { margin-top: 1.2rem; }
+</style>
+</head>
+<body>
+<div class="demo-banner" id="demo-banner" hidden>Demo mode: data is saved in this browser only. Sign in with admin / 1111.</div>
+
+<!-- Sign in -->
+<section class="login" id="login" hidden>
+  <h1>Store admin</h1>
+  <form id="login-form">
+    <label for="l-user">Username</label>
+    <input id="l-user" autocomplete="username" autocapitalize="none" required />
+    <label for="l-pass">Password</label>
+    <input id="l-pass" type="password" autocomplete="current-password" required />
+    <p class="error" id="login-error" role="alert" hidden></p>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+  <p style="margin-top:1.5rem"><a href="./">Back to the store</a></p>
+</section>
+
+<!-- App -->
+<div id="app" hidden>
+  <div class="wrap">
+    <div class="top">
+      <h1 id="title">Store admin</h1>
+      <a href="./" target="_blank" rel="noopener">View store</a>
+    </div>
+
+    <section class="panel" id="p-orders" aria-labelledby="t-orders">
+      <div class="seg" id="order-filter">
+        <button data-f="open" aria-pressed="true">Open</button>
+        <button data-f="unpaid" aria-pressed="false">Unpaid</button>
+        <button data-f="done" aria-pressed="false">Completed</button>
+        <button data-f="cancelled" aria-pressed="false">Cancelled</button>
+        <button data-f="all" aria-pressed="false">All</button>
+      </div>
+      <div id="orders"></div>
+    </section>
+
+    <section class="panel" id="p-products" aria-labelledby="t-products" hidden>
+      <h2>Products</h2>
+      <p class="hint" style="margin-top:-.4rem">Products show on the store in this order. Leave stock blank for no limit.</p>
+      <div id="editor-slot"></div>
+      <div id="products"></div>
+      <button class="btn" id="add-product" type="button">Add a product</button>
+    </section>
+
+    <section class="panel" id="p-sales" aria-labelledby="t-sales" hidden>
+      <h2>Sales</h2>
+      <div class="seg" id="period">
+        <button data-d="1" aria-pressed="false">Today</button>
+        <button data-d="7" aria-pressed="false">7 days</button>
+        <button data-d="30" aria-pressed="true">30 days</button>
+        <button data-d="365" aria-pressed="false">Year</button>
+        <button data-d="0" aria-pressed="false">All time</button>
+      </div>
+      <div id="sales"></div>
+      <div class="actions"><button class="btn secondary" id="csv" type="button">Download orders (CSV)</button></div>
+    </section>
+
+    <section class="panel" id="p-settings" aria-labelledby="t-settings" hidden>
+      <h2>Settings</h2>
+      <form class="settings" id="settings-form">
+        <label class="check"><input type="checkbox" id="s-open" /> Taking orders</label>
+        <label for="s-closed">Message when not taking orders</label>
+        <input id="s-closed" />
+        <label for="s-name">Store name</label>
+        <input id="s-name" />
+        <label for="s-tagline">Line under the store name</label>
+        <input id="s-tagline" />
+        <label for="s-note">What customers see after ordering</label>
+        <textarea id="s-note"></textarea>
+        <label for="s-venmo">Venmo username <span class="hint">(without the @)</span></label>
+        <input id="s-venmo" autocapitalize="none" placeholder="your-venmo-handle" />
+        <p class="hint" style="margin:.4rem 0 0">Until this is set, customers are told to pay when they get their order.</p>
+        <button class="btn" type="submit">Save settings</button>
+      </form>
+      <div class="actions">
+        <button class="btn secondary" id="signout" type="button">Sign out</button>
+        <button class="btn danger" id="reset-demo" type="button" hidden>Reset demo data</button>
+      </div>
+    </section>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="t-orders" data-p="orders" aria-selected="true">Orders<span class="count" id="new-count" hidden></span></button>
+    <button role="tab" id="t-products" data-p="products" aria-selected="false">Products</button>
+    <button role="tab" id="t-sales" data-p="sales" aria-selected="false">Sales</button>
+    <button role="tab" id="t-settings" data-p="settings" aria-selected="false">Settings</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script type="module">
+import { api, DEMO, core, isSignedIn, signOut, resetDemo } from './api.js';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = core.fmtMoney;
+const STATUS_LABEL = { new: 'New', ready: 'Ready', done: 'Completed', cancelled: 'Cancelled' };
+
+let state = null;
+let orderFilter = 'open';
+let period = 30;
+let editing = null; // product id, 'new', or null
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+$('demo-banner').hidden = !DEMO;
+$('reset-demo').hidden = !DEMO;
+
+// ── Sign in ────────────────────────────────────────────────────────────────
+function showLogin(msg) {
+  $('app').hidden = true; $('login').hidden = false;
+  $('login-error').hidden = !msg; $('login-error').textContent = msg || '';
+  $('l-user').focus();
+}
+$('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  try {
+    await api.login($('l-user').value.trim(), $('l-pass').value);
+    $('l-pass').value = '';
+    await start();
+  } catch (ex) {
+    $('login-error').textContent = ex.message; $('login-error').hidden = false;
+  }
+});
+$('signout').onclick = () => { signOut(); showLogin(); };
+
+// Every admin call goes through here so an expired sign-in returns to the login screen.
+async function call(fn, okMsg) {
+  try {
+    const s = await fn();
+    if (s && s.orders) { state = s; render(); }
+    if (okMsg) toast(okMsg);
+    return true;
+  } catch (ex) {
+    if (ex.status === 401) { signOut(); showLogin('Your sign-in expired. Sign in again.'); }
+    else toast(ex.message);
+    return false;
+  }
+}
+
+async function start() {
+  if (!(await call(() => api.admin.state()))) return;
+  $('login').hidden = true; $('app').hidden = false;
+}
+
+// ── Tabs ───────────────────────────────────────────────────────────────────
+document.querySelector('.tabs').addEventListener('click', e => {
+  const b = e.target.closest('button[data-p]'); if (!b) return;
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+  document.querySelectorAll('.panel').forEach(p => p.hidden = p.id !== 'p-' + b.dataset.p);
+  window.scrollTo(0, 0);
+});
+function pressSeg(container, btn) {
+  container.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === btn)));
+}
+
+function render() {
+  $('title').textContent = state.settings.storeName;
+  const n = state.orders.filter(o => o.status === 'new').length;
+  $('new-count').hidden = !n; $('new-count').textContent = n;
+  renderOrders(); renderProducts(); renderSales(); renderSettings();
+}
+
+// ── Orders ─────────────────────────────────────────────────────────────────
+$('order-filter').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  orderFilter = b.dataset.f; pressSeg($('order-filter'), b); renderOrders();
+});
+
+function fmtWhen(iso) {
+  return new Date(iso).toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function renderOrders() {
+  const match = {
+    open: o => o.status === 'new' || o.status === 'ready',
+    unpaid: o => !o.paid && o.status !== 'cancelled',
+    done: o => o.status === 'done',
+    cancelled: o => o.status === 'cancelled',
+    all: () => true,
+  }[orderFilter];
+  const list = state.orders.filter(match).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const emptyText = {
+    open: 'No open orders. New orders from the store show up here.',
+    unpaid: 'Everything is paid up.', done: 'No completed orders yet.',
+    cancelled: 'No cancelled orders.', all: 'No orders yet. Share the store link to get your first one.',
+  }[orderFilter];
+  if (!list.length) { $('orders').innerHTML = `<p class="empty">${emptyText}</p>`; return; }
+
+  $('orders').innerHTML = list.map(o => {
+    const c = o.customer;
+    const tel = c.phone.replace(/[^\d+]/g, '');
+    return `<article class="order ${o.status === 'new' ? 'is-new' : ''}" data-id="${o.id}">
+      <header><span class="who">${esc(c.name)}</span><span class="num">#${o.number}</span></header>
+      <div class="when">${fmtWhen(o.createdAt)}</div>
+      <div class="contact">
+        ${c.phone ? `<a class="btn small secondary" href="tel:${esc(tel)}">Call ${esc(c.phone)}</a><a class="btn small secondary" href="sms:${esc(tel)}">Text</a>` : ''}
+        ${c.email ? `<a class="btn small secondary" href="mailto:${esc(c.email)}?subject=${encodeURIComponent(`Your ${state.settings.storeName} order #${o.number}`)}">Email</a>` : ''}
+      </div>
+      ${c.email && c.phone ? `<div class="when">${esc(c.email)}</div>` : ''}
+      ${c.notes ? `<div class="note">${esc(c.notes)}</div>` : ''}
+      <ul>
+        ${o.items.map(i => `<li><span>${i.qty} × ${esc(core.productLabel(i))}</span><span>${money(i.qty * i.price)}</span></li>`).join('')}
+        <li class="tot"><span>Total <span class="pill ${o.paid ? 'paid' : 'unpaid'}">${o.paid ? `Paid${o.paidMethod ? ' by ' + esc(o.paidMethod) : ''}` : 'Not paid'}</span></span><span>${money(o.total)}</span></li>
+      </ul>
+      <div class="controls">
+        <div>
+          <label for="st-${o.id}">Status</label>
+          <select id="st-${o.id}" data-act="status">
+            ${core.STATUSES.map(s => `<option value="${s}" ${s === o.status ? 'selected' : ''}>${STATUS_LABEL[s]}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <label for="pm-${o.id}">Payment</label>
+          <select id="pm-${o.id}" data-act="pay">
+            <option value="" ${!o.paid ? 'selected' : ''}>Not paid</option>
+            ${core.PAY_METHODS.map(m => `<option value="${m}" ${o.paid && o.paidMethod === m ? 'selected' : ''}>Paid by ${m}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <details>
+        <summary>${o.adminNote ? 'Your note' : 'Add a private note'}</summary>
+        <textarea data-act="note" aria-label="Private note for order ${o.number}" placeholder="Only you can see this">${esc(o.adminNote)}</textarea>
+        <button class="btn small secondary" data-act="save-note" type="button" style="margin-top:.5rem">Save note</button>
+      </details>
+    </article>`;
+  }).join('');
+}
+
+$('orders').addEventListener('change', e => {
+  const card = e.target.closest('.order'); if (!card) return;
+  const id = card.dataset.id, act = e.target.dataset.act, v = e.target.value;
+  if (act === 'status') call(() => api.admin.updateOrder(id, { status: v }), `Marked ${STATUS_LABEL[v].toLowerCase()}`);
+  if (act === 'pay') call(() => api.admin.updateOrder(id, v ? { paid: true, paidMethod: v } : { paid: false }), v ? `Marked paid by ${v}` : 'Marked not paid');
+});
+$('orders').addEventListener('click', e => {
+  if (e.target.dataset.act !== 'save-note') return;
+  const card = e.target.closest('.order');
+  call(() => api.admin.updateOrder(card.dataset.id, { adminNote: card.querySelector('textarea').value }), 'Note saved');
+});
+
+// Pick up new orders while the page is open.
+setInterval(() => {
+  if (document.hidden || $('app').hidden || $('p-orders').hidden) return;
+  if (document.activeElement && ['TEXTAREA', 'SELECT', 'INPUT'].includes(document.activeElement.tagName)) return;
+  api.admin.state().then(s => { state = s; render(); }).catch(() => {});
+}, 60000);
+
+// ── Products ───────────────────────────────────────────────────────────────
+function thumb(p) {
+  const url = p.imageVersion ? api.imageUrl(p) : '';
+  return url ? `<img class="thumb" src="${esc(url)}" alt="" />` : `<div class="thumb" aria-hidden="true">${esc(p.name[0] || '?')}</div>`;
+}
+
+function renderProducts() {
+  const ps = state.products;
+  $('products').innerHTML = ps.length ? ps.map((p, i) => `
+    <div class="prod ${p.active ? '' : 'off'}" data-id="${p.id}">
+      ${thumb(p)}
+      <div>
+        <div class="t">${esc(core.productLabel(p))}</div>
+        <div class="m">${money(p.price)}, ${p.stock === null ? 'no stock limit' : `${p.stock} in stock`}${p.active ? '' : ', hidden from store'}</div>
+      </div>
+      <div class="acts">
+        <button class="icon" data-act="up" aria-label="Move ${esc(core.productLabel(p))} up" ${i ? '' : 'disabled'}>↑</button>
+        <button class="icon" data-act="down" aria-label="Move ${esc(core.productLabel(p))} down" ${i < ps.length - 1 ? '' : 'disabled'}>↓</button>
+        <button class="btn small secondary" data-act="edit">Edit</button>
+      </div>
+    </div>`).join('') : '<p class="empty">No products yet. Add one so customers have something to order.</p>';
+  renderEditor();
+}
+
+$('products').addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]'); if (!b) return;
+  const id = b.closest('.prod').dataset.id;
+  if (b.dataset.act === 'up') call(() => api.admin.moveProduct(id, -1));
+  if (b.dataset.act === 'down') call(() => api.admin.moveProduct(id, 1));
+  if (b.dataset.act === 'edit') { editing = id; renderEditor(); $('editor-slot').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+});
+$('add-product').onclick = () => { editing = 'new'; renderEditor(); $('editor-slot').scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+
+function renderEditor() {
+  const slot = $('editor-slot');
+  if (!editing) { slot.innerHTML = ''; $('add-product').hidden = false; return; }
+  $('add-product').hidden = true;
+  const p = editing === 'new'
+    ? { name: '', unit: '', price: 0, stock: null, active: true, description: '', imageVersion: 0 }
+    : state.products.find(x => x.id === editing);
+  if (!p) { editing = null; slot.innerHTML = ''; return; }
+  slot.innerHTML = `<form class="editor" id="editor">
+    <h3 style="color:var(--board)">${editing === 'new' ? 'New product' : `Edit ${esc(core.productLabel(p))}`}</h3>
+    <div class="row">
+      <div><label for="e-name">Name</label><input id="e-name" value="${esc(p.name)}" placeholder="Honey" required /></div>
+      <div><label for="e-unit">Size or unit</label><input id="e-unit" value="${esc(p.unit)}" placeholder="1 lb jar" /></div>
+    </div>
+    <div class="row">
+      <div><label for="e-price">Price ($)</label><input id="e-price" inputmode="decimal" value="${p.price ? (p.price / 100).toFixed(2) : ''}" placeholder="12.00" required /></div>
+      <div><label for="e-stock">Stock <span class="hint">(blank = no limit)</span></label><input id="e-stock" inputmode="numeric" value="${p.stock ?? ''}" /></div>
+    </div>
+    <label for="e-desc">Short description <span class="hint">(optional)</span></label>
+    <input id="e-desc" value="${esc(p.description)}" />
+    <label class="check"><input type="checkbox" id="e-active" ${p.active ? 'checked' : ''} /> Show on the store</label>
+    ${editing === 'new' ? '<p class="hint">You can add a photo after saving.</p>' : `
+      <label>Photo</label>
+      <div class="photo-edit">
+        ${thumb(p)}
+        <label class="btn small secondary" style="margin:0">${p.imageVersion ? 'Replace photo' : 'Add photo'}
+          <input type="file" id="e-photo" accept="image/*" hidden /></label>
+        ${p.imageVersion ? '<button class="btn small danger" type="button" id="e-photo-remove">Remove</button>' : ''}
+      </div>`}
+    <div class="btns">
+      <button class="btn" type="submit">${editing === 'new' ? 'Add product' : 'Save changes'}</button>
+      <button class="btn secondary" type="button" id="e-cancel">Cancel</button>
+      ${editing === 'new' ? '' : '<button class="btn danger" type="button" id="e-delete">Delete product</button>'}
+    </div>
+  </form>`;
+
+  $('e-cancel').onclick = () => { editing = null; renderEditor(); };
+  $('editor').onsubmit = async e => {
+    e.preventDefault();
+    const input = {
+      id: editing === 'new' ? undefined : editing,
+      name: $('e-name').value, unit: $('e-unit').value, price: $('e-price').value,
+      stock: $('e-stock').value, description: $('e-desc').value, active: $('e-active').checked,
+    };
+    const wasNew = editing === 'new';
+    if (await call(() => api.admin.saveProduct(input), wasNew ? 'Product added' : 'Changes saved')) { editing = null; renderEditor(); }
+  };
+  const del = $('e-delete');
+  if (del) {
+    let armed = 0;
+    del.onclick = async () => {
+      if (Date.now() - armed > 3000) { armed = Date.now(); del.textContent = 'Tap again to delete'; return; }
+      const id = editing;
+      if (await call(() => api.admin.deleteProduct(id), 'Product deleted')) { editing = null; renderEditor(); }
+    };
+  }
+  const photo = $('e-photo');
+  if (photo) photo.onchange = async () => {
+    const f = photo.files[0]; if (!f) return;
+    try {
+      const dataUrl = await shrink(f);
+      await call(() => api.admin.setImage(editing, dataUrl), 'Photo saved');
+    } catch { toast('That file could not be read as a photo.'); }
+  };
+  const rm = $('e-photo-remove');
+  if (rm) rm.onclick = () => call(() => api.admin.removeImage(editing), 'Photo removed');
+}
+
+// Resize photos on the phone before upload so they stay small and load fast.
+function shrink(file, max = 900) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      resolve(c.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+// ── Sales ──────────────────────────────────────────────────────────────────
+$('period').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  period = +b.dataset.d; pressSeg($('period'), b); renderSales();
+});
+function renderSales() {
+  const r = core.salesReport(state, period);
+  $('sales').innerHTML = `
+    <div class="stats">
+      <div class="stat"><b>${money(r.sales)}</b><span>Sales from ${r.orders} order${r.orders === 1 ? '' : 's'}</span></div>
+      <div class="stat"><b>${money(r.paid)}</b><span>Paid</span></div>
+      <div class="stat"><b>${money(r.unpaid)}</b><span>Not paid yet (${r.unpaidCount} order${r.unpaidCount === 1 ? '' : 's'})</span></div>
+      <div class="stat"><b>${r.orders ? money(Math.round(r.sales / r.orders)) : '$0.00'}</b><span>Average order</span></div>
+    </div>
+    <h3 style="margin:1.4rem 0 .6rem;color:var(--board)">By product</h3>
+    ${r.byProduct.length ? `<table><thead><tr><th>Product</th><th class="n">Sold</th><th class="n">Sales</th></tr></thead><tbody>
+      ${r.byProduct.map(x => `<tr><td>${esc(x.label)}</td><td class="n">${x.qty}</td><td class="n">${money(x.total)}</td></tr>`).join('')}
+    </tbody></table>` : '<p class="empty">No sales in this period.</p>'}
+    ${r.byMethod.length ? `<h3 style="margin:1.4rem 0 .6rem;color:var(--board)">Payments received</h3>
+      <table><tbody>${r.byMethod.map(x => `<tr><td>${esc(x.method)}</td><td class="n">${money(x.total)}</td></tr>`).join('')}</tbody></table>` : ''}
+    <p class="hint">Cancelled orders aren't counted.</p>`;
+}
+$('csv').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([core.ordersCsv(state)], { type: 'text/csv' }));
+  a.download = `hen-and-hive-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+
+// ── Settings ───────────────────────────────────────────────────────────────
+function renderSettings() {
+  if ($('p-settings').contains(document.activeElement)) return; // don't clobber typing
+  const s = state.settings;
+  $('s-open').checked = s.open; $('s-closed').value = s.closedMessage;
+  $('s-name').value = s.storeName; $('s-tagline').value = s.tagline; $('s-note').value = s.orderNote;
+  $('s-venmo').value = s.venmoHandle === core.VENMO_PLACEHOLDER ? '' : s.venmoHandle;
+}
+$('settings-form').addEventListener('submit', e => {
+  e.preventDefault();
+  call(() => api.admin.saveSettings({
+    open: $('s-open').checked, closedMessage: $('s-closed').value, storeName: $('s-name').value,
+    tagline: $('s-tagline').value, orderNote: $('s-note').value, venmoHandle: $('s-venmo').value,
+  }), 'Settings saved');
+});
+$('reset-demo').onclick = () => {
+  if ($('reset-demo').dataset.armed !== '1') { $('reset-demo').dataset.armed = '1'; $('reset-demo').textContent = 'Tap again to erase demo data'; return; }
+  resetDemo(); location.reload();
+};
+
+if (isSignedIn()) start(); else showLogin();
+</script>
+</body>
+</html>

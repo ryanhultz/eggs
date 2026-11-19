@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#a3302a" />
+<meta name="description" content="Order fresh eggs and honey from Lisa's Hen & Hive in Cayuga, NY." />
+<title>Lisa's Hen &amp; Hive</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23a3302a'/%3E%3Cpath d='M32 10c10 0 18 15 18 27a18 18 0 0 1-36 0c0-12 8-27 18-27z' fill='%23f1e7d0'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Work+Sans:wght@400;500;600&family=Zilla+Slab:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  :root {
+    --barn: #a3302a;
+    --barn-deep: #7f211c;
+    --muslin: #f1e7d0;
+    --wood: #7a4e2d;
+    --kraft: #d9c29a;
+    --label: #f4ead5;
+    --pencil: #2b2118;
+    --hand: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .22' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .09 0 0 0 0 .04 2.2 0 0 0 -.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    --fibers: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
+  }
+  body {
+    background-color: #ebe2cf;
+    background-image: var(--fibers), repeating-linear-gradient(90deg, transparent 0 138px, rgba(90, 64, 34, .09) 138px 140px);
+    color: var(--pencil);
+  }
+  .wrap { max-width: 50rem; margin: 0 auto; padding: 0 1rem; }
+
+  /* Striped stand awning with a scalloped edge */
+  .awning {
+    height: 46px;
+    background: repeating-linear-gradient(90deg, var(--barn) 0 44px, var(--muslin) 44px 88px);
+    box-shadow: inset 0 -10px 14px -10px rgba(0,0,0,.35);
+    position: relative;
+  }
+  .awning::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 22px;
+    background:
+      radial-gradient(circle at 22px 0, var(--barn) 21px, transparent 22px) 0 0 / 88px 22px repeat-x,
+      radial-gradient(circle at 66px 0, var(--muslin) 21px, transparent 22px) 0 0 / 88px 22px repeat-x;
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,.18));
+  }
+
+  /* Painted wooden sign */
+  header.site { padding: 2.6rem 0 1.4rem; }
+  .sign {
+    position: relative; margin: 0 auto; max-width: 34rem; padding: 1.3rem 1.4rem 1.4rem; text-align: center;
+    background-color: var(--wood);
+    background-image: var(--grain), repeating-linear-gradient(0deg, transparent 0 44px, rgba(0,0,0,.4) 44px 46px);
+    border-radius: 5px; box-shadow: 0 6px 0 -2px #4d2f1a, 0 10px 18px rgba(60, 35, 15, .3);
+  }
+  .sign::before, .sign::after {
+    content: ""; position: absolute; top: .7rem; width: .55rem; height: .55rem; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #c9c1b0, #5d564b); box-shadow: 0 1px 0 rgba(0,0,0,.4);
+  }
+  .sign::before { left: .7rem; } .sign::after { right: .7rem; }
+  .sign h1 {
+    color: var(--muslin); font-size: clamp(2.2rem, 9vw, 3.6rem); letter-spacing: .01em;
+    text-shadow: 0 2px 0 rgba(0,0,0,.25);
+  }
+  .tagline-row { display: flex; align-items: center; justify-content: center; gap: .4rem; margin-top: 1.1rem; text-align: center; }
+  .tagline-row p { margin: 0; font: 700 1.55rem/1.15 var(--hand); color: #4a3524; }
+
+  /* Product crates */
+  .crates { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.2rem; }
+  .crate {
+    background-color: var(--wood);
+    background-image: var(--grain);
+    padding: .55rem; border-radius: 4px; box-shadow: 0 4px 0 -1px #4d2f1a, 0 8px 14px rgba(60, 35, 15, .22);
+  }
+  .panel {
+    position: relative; height: 100%; display: flex; flex-direction: column;
+    background-color: var(--kraft); background-image: var(--fibers);
+    border-radius: 2px; padding: .9rem .95rem 1rem;
+  }
+  .art { aspect-ratio: 22 / 15; display: grid; place-items: center; margin: .6rem 0 .3rem; }
+  .art svg { width: 92%; height: auto; overflow: visible; }
+  .art img { width: 100%; height: 100%; object-fit: cover; border: 5px solid var(--label); box-shadow: 0 2px 6px rgba(0,0,0,.2); transform: rotate(-1.2deg); }
+  .tag {
+    position: absolute; top: .6rem; right: .55rem; z-index: 1; transform: rotate(5deg);
+    background: var(--label); color: var(--pencil);
+    padding: .15rem .7rem .2rem 1.35rem; font: 700 1.75rem/1 var(--hand);
+    clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+    background-image: radial-gradient(circle at 11px 50%, var(--kraft) 3px, rgba(0,0,0,.35) 3.5px, transparent 4.5px);
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,.2));
+  }
+  .tag small { font-size: 1.05rem; margin-left: .15rem; }
+  .crate h2 { font-size: 1.45rem; color: var(--pencil); }
+  .crate .unit { font: 500 1.05rem/1.2 var(--slab); color: #6b4a2b; margin-top: .1rem; }
+  .crate .desc { font-size: .9rem; color: #4a3a2a; margin: .45rem 0 0; }
+  .crate .buy { margin-top: auto; padding-top: .9rem; display: flex; justify-content: flex-end; }
+  .stepper { display: flex; align-items: center; background: var(--board); border-radius: 999px; }
+  .stepper button {
+    width: 2.75rem; height: 2.75rem; border: 0; background: none; color: var(--board-ink);
+    font: 500 1.45rem/1 var(--sans); cursor: pointer; border-radius: 50%;
+  }
+  .stepper button:hover:not(:disabled) { background: rgba(255,255,255,.1); }
+  .stepper button:disabled { opacity: .35; cursor: default; }
+  .stepper output { min-width: 1.7rem; text-align: center; font: 700 1.2rem/1 var(--slab); color: var(--board-ink); }
+  .stepper.has { background: var(--honey); }
+  .stepper.has button, .stepper.has output { color: var(--board); }
+  .stamp {
+    position: absolute; top: 34%; left: 50%; transform: translate(-50%, -50%) rotate(-12deg); z-index: 2;
+    border: 3px solid var(--barn); color: var(--barn); background: rgba(244, 234, 213, .85);
+    font: 700 1.5rem/1 var(--slab); padding: .35rem .8rem; border-radius: 4px; letter-spacing: .04em;
+  }
+  .crate.out .art { opacity: .5; }
+  @media (max-width: 34rem) {
+    .crates { gap: .9rem; }
+    .panel { display: grid; grid-template-columns: 42% 1fr; grid-template-rows: auto auto 1fr auto; column-gap: .8rem; padding: .8rem; }
+    .art { grid-row: 1 / -1; margin: 0; align-self: center; }
+    .crate h2 { padding-top: 1.9rem; font-size: 1.3rem; }
+    .crate .desc { font-size: .85rem; }
+    .crate .buy { padding-top: .6rem; }
+    .stamp { top: 50%; left: 21%; font-size: 1.1rem; }
+  }
+  .closed { grid-column: 1 / -1; text-align: center; font: 700 1.7rem/1.3 var(--hand); padding: 2rem 1rem; color: #4a3524; }
+
+  /* Order slip: lined order-pad paper */
+  section.order { margin: 2.6rem 0 3rem; }
+  .slip {
+    background-color: #fbf7ec;
+    background-image: linear-gradient(90deg, transparent 2.1rem, rgba(163, 48, 42, .45) 2.1rem, rgba(163, 48, 42, .45) calc(2.1rem + 1.5px), transparent calc(2.1rem + 1.5px)),
+      repeating-linear-gradient(0deg, transparent 0 31px, #d3dde3 31px 32px);
+    padding: 1.6rem 1.2rem 1.6rem 3rem; border-radius: 3px; box-shadow: 0 2px 0 #ddd2bb, 0 10px 22px rgba(60, 35, 15, .15);
+    position: relative;
+  }
+  .slip::before {
+    content: ""; position: absolute; top: -.55rem; left: 50%; transform: translateX(-50%); width: 6.5rem; height: 1.1rem;
+    background: rgba(214, 199, 160, .8); border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+  }
+  section.order h2 { font: 700 2.1rem/1 var(--hand); color: var(--barn); }
+  .summary { margin: .9rem 0 .4rem; padding: 0; list-style: none; }
+  .summary li { display: flex; justify-content: space-between; gap: 1rem; padding: .3rem 0; }
+  .summary .total { border-top: 1.5px solid var(--pencil); margin-top: .35rem; padding-top: .6rem; font: 700 1.2rem/1.2 var(--slab); }
+  .empty-cart { color: #6b5a48; margin: .8rem 0 0; font: 600 1.35rem/1.3 var(--hand); }
+  .slip input, .slip textarea { background: rgba(255,255,255,.75); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .8rem; }
+  @media (max-width: 30rem) { .two { grid-template-columns: 1fr; } .slip { padding-left: 2.6rem; } }
+  form .btn { width: 100%; margin-top: 1.4rem; font-size: 1.08rem; }
+  .fine { color: #5d4d3c; font-size: .9rem; margin: .8rem 0 0; }
+  #form-error { margin: 1rem 0 0; }
+
+  .cartbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--board); color: var(--board-ink);
+    padding: .7rem 1.1rem calc(.7rem + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    transform: translateY(110%); visibility: hidden; transition: transform .2s, visibility .2s;
+  }
+  .cartbar.show { transform: none; visibility: visible; }
+  .cartbar strong { font: 700 1.15rem/1.2 var(--slab); }
+
+  .done { margin: 0 0 3rem; }
+  .done h2 { font: 700 clamp(2.2rem, 8vw, 2.9rem)/1.05 var(--hand); color: var(--barn); }
+  .done .lead { font-size: 1.1rem; margin: .8rem 0 0; }
+  .pay { background: rgba(255,255,255,.6); border: 1.5px dashed #b9a98c; border-radius: 4px; padding: 1.1rem; margin: 1.4rem 0; }
+  .pay h3 { font-size: 1.25rem; color: var(--pencil); }
+  .pay p { margin: .5rem 0 0; }
+  .venmo { background: #008cff; color: #fff; margin-top: 1rem; width: 100%; }
+  .venmo:hover { background: #0074d4; }
+  footer { padding: 1rem 0 6rem; text-align: center; color: #5d4d3c; font-size: .9rem; }
+  footer .thanks { font: 700 1.6rem/1.2 var(--hand); color: #4a3524; margin: 0 0 .4rem; }
+  footer a { color: #5d4d3c; }
+</style>
+</head>
+<body>
+<div class="demo-banner" id="demo-banner" hidden>Demo mode: orders are saved in this browser only.</div>
+<div class="awning" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="site">
+    <div class="sign"><h1 id="store-name">Lisa's Hen &amp; Hive</h1></div>
+    <div class="tagline-row"><span id="bee"></span><p id="tagline"></p></div>
+  </header>
+
+  <div id="shop">
+    <div class="crates" id="board" aria-live="polite">
+      <p class="closed">Loading…</p>
+    </div>
+
+    <section class="order slip" id="order" aria-labelledby="order-h">
+      <h2 id="order-h">Your order</h2>
+      <ul class="summary" id="summary"></ul>
+      <p class="empty-cart" id="empty-cart">Tap + to add eggs or honey.</p>
+
+      <form id="form" novalidate>
+        <label for="f-name">Name</label>
+        <input id="f-name" autocomplete="name" required />
+        <div class="two">
+          <div>
+            <label for="f-phone">Phone</label>
+            <input id="f-phone" type="tel" autocomplete="tel" inputmode="tel" />
+          </div>
+          <div>
+            <label for="f-email">Email</label>
+            <input id="f-email" type="email" autocomplete="email" inputmode="email" />
+          </div>
+        </div>
+        <p class="hint" style="margin:.4rem 0 0">Give a phone number, an email, or both.</p>
+        <label for="f-notes">Notes <span class="hint">(optional)</span></label>
+        <textarea id="f-notes" placeholder="Best times to reach you, or anything else Lisa should know"></textarea>
+        <p class="error" id="form-error" role="alert" hidden></p>
+        <button class="btn" id="submit" type="submit">Place order</button>
+        <p class="fine" id="order-note"></p>
+      </form>
+    </section>
+  </div>
+
+  <section class="done slip" id="done" hidden tabindex="-1"></section>
+
+  <footer>
+    <p class="thanks">Thank you for supporting our small farm.</p>
+    <span id="foot-name">Lisa's Hen &amp; Hive</span>, Cayuga, NY
+    <br /><a href="admin.html">Store admin</a>
+  </footer>
+</div>
+
+<div class="cartbar" id="cartbar" aria-hidden="true">
+  <strong id="cartbar-text"></strong>
+  <a class="btn small" href="#order">Review order</a>
+</div>
+
+<script type="module">
+import { api, DEMO, core } from './api.js';
+import { ART_DEFS, artFor, bee } from './art.js';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const money = core.fmtMoney;
+
+let store = null;
+const cart = {}; // product id -> qty
+
+$('demo-banner').hidden = !DEMO;
+document.body.insertAdjacentHTML('afterbegin', ART_DEFS);
+$('bee').innerHTML = bee(40);
+
+async function loadStore() {
+  try {
+    store = await api.store();
+  } catch (e) {
+    $('board').innerHTML = `<p class="closed">${esc(e.message)}</p>`;
+    $('order').hidden = true;
+    return;
+  }
+  const s = store.settings;
+  document.title = s.storeName;
+  $('store-name').textContent = s.storeName;
+  $('foot-name').textContent = s.storeName;
+  $('tagline').textContent = s.tagline;
+  $('order-note').textContent = `No payment needed to place your order. ${s.orderNote}`;
+  for (const id of Object.keys(cart)) {
+    const p = store.products.find(x => x.id === id);
+    if (!p || p.soldOut) delete cart[id]; else cart[id] = Math.min(cart[id], p.maxQty);
+  }
+  renderBoard(); renderCart();
+}
+
+function renderBoard() {
+  if (!store.settings.open) {
+    $('board').innerHTML = `<p class="closed">${esc(store.settings.closedMessage)}</p>`;
+    $('order').hidden = true;
+    return;
+  }
+  $('order').hidden = false;
+  if (!store.products.length) {
+    $('board').innerHTML = '<p class="closed">Nothing is out on the stand right now. Check back soon.</p>';
+    return;
+  }
+  $('board').innerHTML = store.products.map(p => {
+    const img = p.imageVersion ? api.imageUrl(p) : '';
+    const q = cart[p.id] || 0;
+    const label = esc(core.productLabel(p));
+    const [dollars, cents] = (p.price / 100).toFixed(2).split('.');
+    const control = p.soldOut ? '' :
+      `<div class="buy"><div class="stepper ${q ? 'has' : ''}" role="group" aria-label="Quantity of ${label}">
+         <button type="button" data-id="${p.id}" data-d="-1" aria-label="Remove one ${label}" ${q ? '' : 'disabled'}>−</button>
+         <output aria-live="polite">${q}</output>
+         <button type="button" data-id="${p.id}" data-d="1" aria-label="Add one ${label}" ${q >= p.maxQty ? 'disabled' : ''}>+</button>
+       </div></div>`;
+    return `<article class="crate ${p.soldOut ? 'out' : ''}"><div class="panel">
+      <div class="tag" aria-label="${money(p.price)}">$${dollars}${cents !== '00' ? `<small>.${cents}</small>` : ''}</div>
+      ${p.soldOut ? '<div class="stamp">Sold out</div>' : ''}
+      <div class="art">${img ? `<img src="${esc(img)}" alt="${label}" loading="lazy" />` : artFor(p)}</div>
+      <h2>${esc(p.name)}</h2>
+      ${p.unit ? `<div class="unit">${esc(p.unit)}</div>` : ''}
+      ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ''}
+      ${control}
+    </div></article>`;
+  }).join('');
+}
+
+$('board').addEventListener('click', e => {
+  const b = e.target.closest('button[data-id]');
+  if (!b) return;
+  const p = store.products.find(x => x.id === b.dataset.id);
+  cart[p.id] = Math.max(0, Math.min(p.maxQty, (cart[p.id] || 0) + Number(b.dataset.d)));
+  if (!cart[p.id]) delete cart[p.id];
+  renderBoard(); renderCart();
+  const again = $('board').querySelector(`button[data-id="${p.id}"][data-d="${b.dataset.d}"]`);
+  if (again && !again.disabled) again.focus();
+});
+
+function cartLines() {
+  return Object.entries(cart).map(([id, qty]) => ({ p: store.products.find(x => x.id === id), qty })).filter(l => l.p);
+}
+
+function renderCart() {
+  const lines = cartLines();
+  const total = lines.reduce((a, l) => a + l.p.price * l.qty, 0);
+  const count = lines.reduce((a, l) => a + l.qty, 0);
+  $('empty-cart').hidden = !!lines.length;
+  $('summary').innerHTML = lines.length ? lines.map(l =>
+    `<li><span>${l.qty} × ${esc(core.productLabel(l.p))}</span><span>${money(l.p.price * l.qty)}</span></li>`).join('') +
+    `<li class="total"><span>Total</span><span>${money(total)}</span></li>` : '';
+  $('submit').textContent = lines.length ? `Place order for ${money(total)}` : 'Place order';
+  $('cartbar-text').textContent = `${count} item${count === 1 ? '' : 's'}, ${money(total)}`;
+  updateCartbar();
+}
+
+// Show the bottom bar only while there's a cart and the order form is off screen.
+let formVisible = false;
+new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; updateCartbar(); }, { threshold: 0.05 }).observe($('order'));
+function updateCartbar() {
+  const show = Object.keys(cart).length > 0 && !formVisible && !$('shop').hidden;
+  $('cartbar').classList.toggle('show', show);
+  $('cartbar').setAttribute('aria-hidden', String(!show));
+}
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const err = $('form-error');
+  err.hidden = true;
+  const lines = cartLines();
+  const customer = { name: $('f-name').value, phone: $('f-phone').value, email: $('f-email').value, notes: $('f-notes').value };
+  const show = msg => { err.textContent = msg; err.hidden = false; };
+  if (!lines.length) return show('Add at least one item to your order.');
+  if (!customer.name.trim()) { $('f-name').focus(); return show('Enter your name.'); }
+  if (!customer.phone.trim() && !customer.email.trim()) { $('f-phone').focus(); return show('Enter a phone number or email so Lisa can reach you.'); }
+
+  const btn = $('submit');
+  btn.disabled = true; btn.textContent = 'Placing order…';
+  try {
+    const r = await api.placeOrder({ customer, items: lines.map(l => ({ id: l.p.id, qty: l.qty })) });
+    showDone(r, customer.name.trim().split(/\s+/)[0]);
+  } catch (ex) {
+    show(ex.message);
+    if (ex.status === 409) await loadStore();
+  } finally {
+    btn.disabled = false; renderCart();
+  }
+});
+
+function showDone(r, firstName) {
+  const pay = r.venmoUrl
+    ? `<h3>Pay with Venmo</h3>
+       <p>You can pay now or when you get your order. Your order number is already in the Venmo note.</p>
+       <a class="btn venmo" href="${esc(r.venmoUrl)}" target="_blank" rel="noopener">Pay ${money(r.total)} with Venmo</a>`
+    : `<h3>How to pay</h3>
+       <p>Venmo payments are coming soon. For now, pay Lisa when you get your order.</p>`;
+  $('done').innerHTML = `
+    <h2>Thanks, ${esc(firstName)}. Order #${r.number} is in.</h2>
+    <p class="lead">${esc(r.orderNote)}</p>
+    <ul class="summary">
+      ${r.items.map(i => `<li><span>${i.qty} × ${esc(core.productLabel(i))}</span><span>${money(i.price * i.qty)}</span></li>`).join('')}
+      <li class="total"><span>Total</span><span>${money(r.total)}</span></li>
+    </ul>
+    <div class="pay">${pay}</div>
+    <button class="btn secondary" id="again" type="button">Place another order</button>`;
+  $('shop').hidden = true; $('done').hidden = false;
+  for (const k of Object.keys(cart)) delete cart[k];
+  $('form').reset();
+  updateCartbar();
+  window.scrollTo(0, 0); $('done').focus({ preventScroll: true });
+  $('again').onclick = async () => {
+    $('done').hidden = true; $('shop').hidden = false;
+    await loadStore(); window.scrollTo(0, 0);
+  };
+}
+
+loadStore();
+</script>
+</body>
+</html>
